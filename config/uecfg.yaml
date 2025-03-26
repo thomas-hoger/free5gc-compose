@@ -60,7 +60,7 @@ configured-nssai:
 # Default Configured NSSAI for this UE
 default-nssai:
   - sst: 1
-    sd: 1
+    sd: 0x010203
 
 # Supported integrity algorithms by this UE
 integrity:

@@ -2,8 +2,11 @@ version: "3.8"
 
 services:
   free5gc-upf:
-    container_name: upf
+    # container_name: upf
     image: free5gc/upf:v4.0.0
+    build:
+      context: .
+      dockerfile: nf_upf/Dockerfile
     command: bash -c "./upf-iptables.sh && ./upf -c ./config/upfcfg.yaml"
     volumes:
       - ./config/upfcfg.yaml:/free5gc/config/upfcfg.yaml
@@ -279,9 +282,24 @@ services:
       - db
       - free5gc-nrf
 
+  free5gc-evil:
+    container_name: "free5gc-evil"
+    image: alpine
+    expose:
+        - 80/tcp
+        - 8080/tcp
+        - 8805/udp
+    command: ["sh", "-c", "while true; do nc -l -p 8080; done"]
+    networks:
+        privnet:
+          ipv4_address: 10.100.200.66
+
   ueransim:
     container_name: ueransim
-    image: free5gc/ueransim:latest
+    # image: free5gc/ueransim:latest
+    build:
+      context: .
+      dockerfile: ueransim/Dockerfile
     command: ./nr-gnb -c ./config/gnbcfg.yaml
     volumes:
       - ./config/gnbcfg.yaml:/ueransim/config/gnbcfg.yaml
@@ -297,6 +315,8 @@ services:
     depends_on:
       - free5gc-amf
       - free5gc-upf
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
 
   n3iwue:
     container_name: n3iwue
