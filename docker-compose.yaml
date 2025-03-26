@@ -121,8 +121,8 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      ipv4_address: 10.100.200.9
       privnet:
+        ipv4_address: 10.100.200.9
         aliases:
           - pcf.free5gc.org
     depends_on:
@@ -141,8 +141,8 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      ipv4_address: 10.100.200.8
       privnet:
+        ipv4_address: 10.100.200.8
         aliases:
           - smf.free5gc.org
     depends_on:
@@ -334,8 +334,8 @@ services:
     devices:
       - "/dev/net/tun"
     networks:
-      ipv4_address: 10.100.200.14
       privnet:
+        ipv4_address: 10.100.200.14
         aliases:
           - gnb.free5gc.org
     depends_on:
