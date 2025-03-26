@@ -4,6 +4,8 @@ LABEL maintainer="Free5GC <support@free5gc.org>"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+ARG TARGET_ARCH=x86_64
+
 # Install dependencies
 RUN apt-get update \
     && apt-get install libsctp-dev lksctp-tools iproute2 netcat tcpdump iptables -y \
