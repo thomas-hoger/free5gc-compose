@@ -2,11 +2,11 @@ version: "3.8"
 
 services:
   free5gc-upf:
-    # container_name: upf
+    container_name: upf
     image: free5gc/upf:v4.0.0
-    build:
-      context: .
-      dockerfile: nf_upf/Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: nf_upf/Dockerfile
     command: bash -c "./upf-iptables.sh && ./upf -c ./config/upfcfg.yaml"
     volumes:
       - ./config/upfcfg.yaml:/free5gc/config/upfcfg.yaml
@@ -28,6 +28,7 @@ services:
       - dbdata:/data/db
     networks:
       privnet:
+        ipv4_address: 10.100.200.3
         aliases:
           - db
 
@@ -45,6 +46,7 @@ services:
       GIN_MODE: release
     networks:
       privnet:
+        ipv4_address: 10.100.200.4
         aliases:
           - nrf.free5gc.org
     depends_on:
@@ -82,6 +84,7 @@ services:
       GIN_MODE: release
     networks:
       privnet:
+        ipv4_address: 10.100.200.6
         aliases:
           - ausf.free5gc.org
     depends_on:
@@ -100,6 +103,7 @@ services:
       GIN_MODE: release
     networks:
       privnet:
+        ipv4_address: 10.100.200.12
         aliases:
           - nssf.free5gc.org
     depends_on:
@@ -117,6 +121,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
+      ipv4_address: 10.100.200.9
       privnet:
         aliases:
           - pcf.free5gc.org
@@ -136,6 +141,7 @@ services:
     environment:
       GIN_MODE: release
     networks:
+      ipv4_address: 10.100.200.8
       privnet:
         aliases:
           - smf.free5gc.org
@@ -156,6 +162,7 @@ services:
       GIN_MODE: release
     networks:
       privnet:
+        ipv4_address: 10.100.200.10
         aliases:
           - udm.free5gc.org
     depends_on:
@@ -176,6 +183,7 @@ services:
       GIN_MODE: release
     networks:
       privnet:
+        ipv4_address: 10.100.200.7
         aliases:
           - udr.free5gc.org
     depends_on:
@@ -196,6 +204,7 @@ services:
       GIN_MODE: release
     networks:
       privnet:
+        ipv4_address: 10.100.200.13
         aliases:
           - chf.free5gc.org
     depends_on:
@@ -254,6 +263,7 @@ services:
       GIN_MODE: release
     networks:
       privnet:
+        ipv4_address: 10.100.200.11
         aliases:
           - nef.free5gc.org
     depends_on:
@@ -272,6 +282,7 @@ services:
       - GIN_MODE=release
     networks:
       privnet:
+        ipv4_address: 10.100.200.5
         aliases:
           - webui
     ports:
@@ -283,16 +294,30 @@ services:
       - free5gc-nrf
 
   free5gc-evil:
-    container_name: "free5gc-evil"
-    image: alpine
+    container_name: "evil"
+    build:
+      context: .
+      dockerfile: nf_evil/Dockerfile
     expose:
-        - 80/tcp
-        - 8080/tcp
-        - 8805/udp
-    command: ["sh", "-c", "while true; do nc -l -p 8080; done"]
+      - 80/tcp
+      - 8080/tcp
+      - 8805/udp
     networks:
-        privnet:
-          ipv4_address: 10.100.200.66
+      privnet:
+        ipv4_address: 10.100.200.66
+
+  free5gc-victim:
+    container_name: "victim"
+    build:
+      context: .
+      dockerfile: nf_victim/Dockerfile
+    expose:
+      - 80/tcp
+      - 8080/tcp
+      - 8805/udp
+    networks:
+      privnet:
+        ipv4_address: 10.100.200.99
 
   ueransim:
     container_name: ueransim
@@ -309,6 +334,7 @@ services:
     devices:
       - "/dev/net/tun"
     networks:
+      ipv4_address: 10.100.200.14
       privnet:
         aliases:
           - gnb.free5gc.org
