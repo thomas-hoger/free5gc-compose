@@ -2,13 +2,13 @@
 FROM python:3.9-slim
 
 # Mettre à jour les index des paquets et installer git
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git netcat-openbsd tcpreplay
 
 # Définir le répertoire de travail
 WORKDIR /app
 
 # Copier le contenu du dépôt GitHub dans le conteneur
-RUN git clone https://github.com/HeineKayn/5G-dataset-generation.git /app
+RUN git clone --branch guilhem --single-branch https://github.com/thomas-hoger/CTD5G /app
 
 # Installer les dépendances Python
 RUN pip install --no-cache-dir -r requirements.txt

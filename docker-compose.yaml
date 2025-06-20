@@ -305,19 +305,9 @@ services:
     networks:
       privnet:
         ipv4_address: 10.100.200.66
-
-  free5gc-victim:
-    container_name: "victim"
-    build:
-      context: .
-      dockerfile: nf_victim/Dockerfile
-    expose:
-      - 80/tcp
-      - 8080/tcp
-      - 8805/udp
-    networks:
-      privnet:
-        ipv4_address: 10.100.200.99
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/shm/ue_data:/dev/shm/ue_data
 
   ueransim:
     container_name: ueransim
