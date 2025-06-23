@@ -3,10 +3,10 @@ version: "3.8"
 services:
   free5gc-upf:
     container_name: upf
-    image: free5gc/upf:v4.0.0
-    # build:
-    #   context: .
-    #   dockerfile: nf_upf/Dockerfile
+    # image: free5gc/upf:v4.0.0
+    build:
+      context: .
+      dockerfile: nf_upf/Dockerfile
     command: bash -c "./upf-iptables.sh && ./upf -c ./config/upfcfg.yaml"
     volumes:
       - ./config/upfcfg.yaml:/free5gc/config/upfcfg.yaml
