@@ -27,16 +27,7 @@ RUN apt-get update \
     RUN apt-get update \
     && apt-get install libsctp-dev lksctp-tools iproute2 iputils-ping procps psmisc -y \
     && apt-get clean
-
-
-    RUN mkdir /app
-    
-    RUN apt-get update && apt-get install -y git netcat-openbsd tcpreplay python3 python3-pip
-    
-    RUN git clone --branch guilhem --single-branch https://github.com/thomas-hoger/5G-dataset-generation.git /app
-    
-    RUN pip3 install -r /app/requirements.txt
-
+            
     WORKDIR /ueransim    
     
     RUN mkdir -p config/ binder/

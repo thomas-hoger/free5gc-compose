@@ -1,17 +1,20 @@
-# Utiliser une image de base avec Python préinstallé
-FROM python:3.9-slim
+# Use Python 3.12 slim as base image
+FROM python:3.12-slim
 
-# Mettre à jour les index des paquets et installer git
-RUN apt-get update && apt-get install -y git netcat-openbsd tcpreplay
+# Update package index and install required system packages including libpcap for Scapy
+RUN apt-get update && apt-get install -y git procps socat iproute2 netcat-openbsd libpcap-dev
 
-# Définir le répertoire de travail
-WORKDIR /app
+# Set working directory for cloning repositories
+WORKDIR /app/repos
 
-# Copier le contenu du dépôt GitHub dans le conteneur
-RUN git clone --branch guilhem --single-branch https://github.com/thomas-hoger/CTD5G /app
+# Clone both projects into the same parent folder
+RUN git clone --single-branch https://github.com/thomas-hoger/CTD-5G.git 
+RUN git clone --single-branch https://github.com/jdegre/5GC_APIs.git
 
-# Installer les dépendances Python
+WORKDIR /app/repos/CTD-5G
+
+# Install Python dependencies for CTD-5G
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Définir la commande par défaut
+# Default command — adjust this to what your container should actually run
 CMD ["sh", "-c", "while true; do nc -l -p 8080; done"]
