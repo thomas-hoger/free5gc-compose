@@ -1,4 +1,4 @@
-FROM gcc:9.4.0 AS builder
+FROM debian:bullseye-slim AS builder
 
 LABEL maintainer="Free5GC <support@free5gc.org>"
 
@@ -8,7 +8,7 @@ ARG TARGET_ARCH=x86_64
 
 # Install dependencies
 RUN apt-get update \
-    && apt-get install libsctp-dev lksctp-tools iproute2 netcat tcpdump iptables -y \
+    && apt-get install build-essential libsctp-dev lksctp-tools iproute2 netcat tcpdump iptables wget git make -y \
     && wget https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1-linux-x86_64.sh -O cmake_installer.sh \
     && chmod +x cmake_installer.sh \
     && ./cmake_installer.sh --skip-license \
@@ -16,9 +16,7 @@ RUN apt-get update \
     && git clone -b master -j `nproc` https://github.com/thomas-hoger/UERANSIM \
     && cd ./UERANSIM \
     && make
-    
-    
-    
+
     FROM bitnami/minideb:bullseye    
     
     ENV DEBIAN_FRONTEND=noninteractive
